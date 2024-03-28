@@ -28,7 +28,9 @@
 				<h4 class="card-header"><strong>Formulario de registro</strong></h4>
 				<div class="card-body">
 					<form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
-						
+
+						<input type="hidden" th:field="*{id}" />
+
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">

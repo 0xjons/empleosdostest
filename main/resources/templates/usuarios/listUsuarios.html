@@ -59,9 +59,14 @@
 										onclick="return confirm('¿Estas seguro?')" class="btn btn-danger btn-sm"
 										role="button" title="Eliminar"><i class="fas fa-trash"
 											aria-hidden="true"></i></a>
-									<a href="#" onclick="return confirm('¿Quiere bloquear el acceso al usuario?')"
-										class="btn btn-warning btn-sm" role="button" title="Bloquear"><i
-											class="fas fa-lock" aria-hidden="true"></i></a>
+									<a th:href="@{/usuarios/updateStatus/{id}/{status} (id=${usuario.id}, status=${usuario.estatus == 1 ? 0 : 1}) }"
+										onclick="return confirm('¿Está seguro que quiere cambiar el estado de este usuario?')"
+										class="btn btn-sm"
+										th:classappend="${usuario.estatus == 1 ? 'btn-warning' : 'btn-success'}"
+										role="button" title="Cambiar estado"><i
+											th:class="'fas ' + ${usuario.estatus == 1 ? 'fa-lock' : 'fa-unlock'}"
+											aria-hidden="true"></i></a>
+
 								</td>
 							</tr>
 

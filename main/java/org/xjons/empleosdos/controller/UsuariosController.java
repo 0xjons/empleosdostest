@@ -43,49 +43,75 @@ public class UsuariosController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String crear(Usuario usuario, Model model) {
-		// Asegúrate de que 'usuario' se agregue al modelo, ya que esto es lo que espera
-		// la vista 'formRegistro'.
-		model.addAttribute("usuario", usuario);
 		return "formRegistro";
 	}
 
 //Método para guardar o actualizar un usuario
 	@PostMapping("/save")
 	public String guardar(@ModelAttribute Usuario usuario, BindingResult result, RedirectAttributes attributes) {
-		// Si el usuario tiene un ID, es una edición, de lo contrario es una creación
-		if (usuario.getId() != null) {
-			Usuario usuarioExistente = us.buscarPorId(usuario.getId());
-			usuario.setPassword(usuarioExistente.getPassword());
-			if (usuarioExistente != null) {
-				// Actualiza los datos que se permiten cambiar
-				usuarioExistente.setNombre(usuario.getNombre());
-				usuarioExistente.setEmail(usuario.getEmail());
-				// Agrega otros campos que desees actualizar
-				usuario = usuarioExistente;
-			}
-		} else {
-			// Para un nuevo usuario, establece el estatus y la fecha de registro
-			usuario.setEstatus(1); // Activo
-			usuario.setFechaRegistro(new Date());
-		}
+	    if (result.hasErrors()) {
+	        return "formRegistro";
+	    }
 
-		// Intenta guardar el usuario
-		try {
-			us.guardar(usuario);
-			attributes.addFlashAttribute("msg", "Los cambios fueron guardados con éxito");
-		} catch (DataIntegrityViolationException e) {
-			attributes.addFlashAttribute("msgError", "Error al guardar el usuario");
-		}
+	    try {
+	        if (usuario.getId() != null) {
+	            // Es una actualización
+	            Usuario usuarioExistente = us.buscarPorId(usuario.getId());
+	            if (usuarioExistente != null) {
+	                usuarioExistente.setNombre(usuario.getNombre());
+	                usuarioExistente.setEmail(usuario.getEmail());
+	                usuarioExistente.setUsername(usuario.getUsername()); // Asegúrate de que esto se maneje correctamente
+	                usuarioExistente.setPassword(usuarioExistente.getPassword()); // No cambies la contraseña aquí
 
-		return "redirect:/usuarios/index";
+	                // Mantén el estatus existente si no se está modificando en el formulario
+	                if (usuario.getEstatus() == null) {
+	                    usuario.setEstatus(usuarioExistente.getEstatus());
+	                } else {
+	                    usuarioExistente.setEstatus(usuario.getEstatus());
+	                }
+
+	                // Guarda el usuario existente actualizado
+	                us.guardar(usuarioExistente);
+	            }
+	        } else {
+	            // Es un nuevo usuario
+	            usuario.setFechaRegistro(new Date());
+	            usuario.setEstatus(1); // Asegúrate de establecer un estatus por defecto
+	            us.guardar(usuario);
+	        }
+	        attributes.addFlashAttribute("msg", "Los cambios fueron guardados con éxito");
+	    } catch (DataIntegrityViolationException e) {
+	        attributes.addFlashAttribute("msgError", "Error al guardar el usuario: " + e.getMessage());
+	    }
+
+	    return "redirect:/usuarios/index";
 	}
 
+	
 	@GetMapping("/edit/{id}")
 	public String editar(@PathVariable("id") int idUsuario, Model model) {
 		Usuario usuario = us.buscarPorId(idUsuario);
 		model.addAttribute("usuario", usuario);
 		return "formRegistro";
 	}
+	
+	@GetMapping("/updateStatus/{id}/{status}")
+	public String actualizarEstado(@PathVariable("id") int idUsuario, @PathVariable("status") int nuevoEstado, RedirectAttributes attributes) {
+	    try {
+	        Usuario usuario = us.buscarPorId(idUsuario);
+	        if (usuario != null) {
+	            usuario.setEstatus(nuevoEstado);
+	            us.guardar(usuario);
+	            attributes.addFlashAttribute("msg", "El estado del usuario ha sido actualizado con éxito");
+	        } else {
+	            attributes.addFlashAttribute("msgError", "Usuario no encontrado");
+	        }
+	    } catch (Exception e) {
+	        attributes.addFlashAttribute("msgError", "Error al actualizar el estado del usuario");
+	    }
+	    return "redirect:/usuarios/index";
+	}
+
 
 	@ModelAttribute
 	public void setGenericos(Model model) {
