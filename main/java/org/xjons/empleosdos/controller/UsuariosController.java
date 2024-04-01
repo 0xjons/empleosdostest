@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,9 @@ public class UsuariosController {
 
 	@Autowired
 	private IUsuariosService us;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/index")
 	public String mostrarIndex(Model model) {
@@ -52,6 +56,9 @@ public class UsuariosController {
 	    if (result.hasErrors()) {
 	        return "formRegistro";
 	    }
+	    
+	  		String pwdPlano = usuario.getPassword();
+	  		String pwdEncriptado = passwordEncoder.encode(pwdPlano);
 
 	    try {
 	        if (usuario.getId() != null) {
@@ -77,6 +84,7 @@ public class UsuariosController {
 	            // Es un nuevo usuario
 	            usuario.setFechaRegistro(new Date());
 	            usuario.setEstatus(1); // Asegúrate de establecer un estatus por defecto
+	            usuario.setPassword(pwdEncriptado);
 	            us.guardar(usuario);
 	        }
 	        attributes.addFlashAttribute("msg", "Los cambios fueron guardados con éxito");
@@ -84,7 +92,7 @@ public class UsuariosController {
 	        attributes.addFlashAttribute("msgError", "Error al guardar el usuario: " + e.getMessage());
 	    }
 
-	    return "redirect:/usuarios/index";
+	    return "redirect:/";
 	}
 
 	

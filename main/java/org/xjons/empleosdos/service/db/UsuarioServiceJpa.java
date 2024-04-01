@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.xjons.empleosdos.model.Categoria;
 import org.xjons.empleosdos.model.Usuario;
 import org.xjons.empleosdos.repository.UsuariosRepository;
 import org.xjons.empleosdos.service.IUsuariosService;

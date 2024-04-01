@@ -3,6 +3,8 @@ package org.xjons.empleosdos.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.xjons.empleosdos.model.Categoria;
 
@@ -45,7 +47,7 @@ public class CategoriasServiceImpl implements ICategoriasService {
 		cat5.setId(5);
 		cat5.setNombre("Educacion");
 		cat5.setDescripcion("Maestros, tutores, etc");
-		
+
 		// Categoria 5
 		Categoria cat6 = new Categoria();
 		cat6.setId(6);
@@ -66,16 +68,15 @@ public class CategoriasServiceImpl implements ICategoriasService {
 
 	@Override
 	public void guardar(Categoria categoria) {
-	    // Determinar el máximo ID actual en la lista de categorías.
-	    int maxId = lista.stream().mapToInt(Categoria::getId).max().orElse(0);
-	    
-	    // Asignar el ID incrementado en 1 a la nueva categoría.
-	    categoria.setId(maxId + 1);
+		// Determinar el máximo ID actual en la lista de categorías.
+		int maxId = lista.stream().mapToInt(Categoria::getId).max().orElse(0);
 
-	    // Agregar la nueva categoría a la lista.
-	    lista.add(categoria);
+		// Asignar el ID incrementado en 1 a la nueva categoría.
+		categoria.setId(maxId + 1);
+
+		// Agregar la nueva categoría a la lista.
+		lista.add(categoria);
 	}
-
 
 	public List<Categoria> buscarTodas() {
 		return lista;
@@ -93,7 +94,13 @@ public class CategoriasServiceImpl implements ICategoriasService {
 	@Override
 	public void eliminar(Integer idCat) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public Page<Categoria> buscarTodas(Pageable page) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

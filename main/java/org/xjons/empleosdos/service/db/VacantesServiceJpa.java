@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.xjons.empleosdos.model.Vacante;
 import org.xjons.empleosdos.repository.VacantesRepository;
@@ -41,7 +44,6 @@ public final class VacantesServiceJpa implements IVacanteService {
 	public void guardar(Vacante vacante) {
 		// TODO Auto-generated method stub
 		vacantesRepo.save(vacante);
-
 	}
 
 	@Override
@@ -54,6 +56,18 @@ public final class VacantesServiceJpa implements IVacanteService {
 	public void eliminar(Integer idVacante) {
 		vacantesRepo.deleteById(idVacante);
 
+	}
+
+	@Override
+	public List<Vacante> buscarByExample(Example<Vacante> example) {
+		// TODO Auto-generated method stub
+		return vacantesRepo.findAll(example);
+	}
+
+	@Override
+	public Page<Vacante> buscarTodas(Pageable page) {
+		// TODO Auto-generated method stub
+		return vacantesRepo.findAll(page);
 	}
 
 }

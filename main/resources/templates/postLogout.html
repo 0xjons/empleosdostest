@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: headFragment">
+    <!-- Aquí se reemplaza el contenido del <head> con el fragmento de tu proyecto -->
+</head>
+
+<body>
+
+<header th:replace="fragments/menu :: menu-principal">
+    <!-- Aquí se inserta el menú principal -->
+</header>
+
+<main role="main" class="container mt-5">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron text-center">
+        <h1>Has cerrado sesión exitosamente.</h1>
+        <p>Serás redirigido a la página principal en unos segundos...</p>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.href = '/'; // Redirige al inicio después de 5 segundos
+        }, 5000);
+    </script>
+</main>
+
+<footer th:replace="fragments/footer :: pie-pagina">
+    <!-- Aquí se inserta el footer -->
+</footer>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Colocado al final del documento para que las páginas se carguen más rápido -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
