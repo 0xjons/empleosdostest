@@ -38,18 +38,6 @@
 			</li>
 		</ul>
 
-		<div class="navbar-nav">
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-bell"></i>
-					<span class="badge badge-danger">0</span> <!-- Número de notificaciones -->
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-					<!-- Elementos de notificaciones -->
-				</div>
-			</li>
-		</div>
 
 
 		<div sec:authorize="isAnonymous()">
@@ -59,10 +47,26 @@
 		</div>
 
 		<div sec:authorize="isAuthenticated()">
-			<span class="text-light mx-1">Bienvenido</span>&nbsp;<span class="text-light"
-				sec:authentication="name"></span>
-			<!-- Botón de Salir solo visible si el usuario está autenticado -->
-			<a class="btn btn-primary" th:href="@{/confirmLogout}">Salir</a>
+
+			<div class="navbar-nav">
+				<div class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-bell"></i>
+						<span class="badge badge-danger">0</span> <!-- Número de notificaciones -->
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<!-- Elementos de notificaciones -->
+					</div>
+				</div>
+				<div class="nav-item d-flex align-items-center">
+					<span class="text-light mx-1">Bienvenido</span>
+					<span class="text-light" sec:authentication="name"></span>
+				</div>
+				<a class="btn btn-primary ml-2" th:href="@{/confirmLogout}">Salir</a>
+			</div>
 		</div>
+
+	</div>
 	</div>
 </nav>

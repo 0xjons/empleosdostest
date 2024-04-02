@@ -18,7 +18,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.xjons.empleosdos.model.Usuario;
 import org.xjons.empleosdos.model.Vacante;
@@ -64,6 +66,11 @@ public final class HomeController {
 		}
 
 		return "redirect:/";
+	}
+	
+	@GetMapping("/login")
+	public String mostrarLogin() {
+		return "formLogin";
 	}
 
 	@GetMapping("/signup")
@@ -114,6 +121,12 @@ public final class HomeController {
 
 		model.addAttribute("vacantes", lista);
 		return "index";
+	}
+	
+	@GetMapping("/bcrypt/{texto}")
+	@ResponseBody
+	public String encriptar(@PathVariable("texto") String texto) {
+		return texto + "Encriptdado en Bcrypt: " + passwordEncoder.encode(texto);
 	}
 
 	@ModelAttribute

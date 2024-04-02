@@ -41,11 +41,11 @@ public class DatabaseWebSecurity {
                 .requestMatchers("/usuarios/**").hasAnyAuthority("ADMINISTRADOR")
                 // Recursos estáticos y páginas públicas
                 .requestMatchers("/bootstrap/**", "/images/**", "/tinymce/**", "/logos/**").permitAll()
-                .requestMatchers("/", "/search").permitAll()
+                .requestMatchers("/", "/search", "/bcrypt/**").permitAll()
                 // Resto de las peticiones requieren autenticación
                 .anyRequest().authenticated())
             .formLogin(form -> form
-                //.loginPage("/login") // Especificar la página de login personalizada
+                .loginPage("/login") // Especificar la página de login personalizada
                 .defaultSuccessUrl("/home", true) // Página a la que se redirige tras un login exitoso
                 //.failureUrl("/login-error") // Página de error en caso de fallo en el login
                 .permitAll())

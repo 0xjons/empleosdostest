@@ -29,6 +29,11 @@
 						<h4 class="card-header">Aplicar para <strong th:text="${vacante.nombre}">Ingeniero
 								Civil</strong></h4>
 						<div class="card-body">
+
+							<div class="alert alert-danger" role="alert" sec:authorize="isAnonymous()">
+								¿Te interesa esta vacante? <strong>Regístrate</strong> y después ingresa para enviar el
+								CV.
+							</div>
 							<h5 class="card-title"><strong>Categoría: </strong> <span
 									th:text="${vacante.categoria.nombre}">Nombre la categoría</span></h5>
 							<h6 class="card-title"><strong>Publicado: </strong> <span
@@ -46,6 +51,7 @@
 								</div>
 							</div>
 							<a class="btn btn-primary" href="#" role="button"
+								sec:authorize="isAuthenticated() and hasAnyAuthority('USUARIO', 'ADMINISTRADOR')"
 								title="Quiero aplicar para esta oferta de trabajo."><i class="fas fa-file"
 									aria-hidden="true"></i> Aplicar</a>
 						</div>

@@ -27,7 +27,7 @@
 			<div class="card">
 				<h4 class="card-header"><strong>Formulario de registro</strong></h4>
 				<div class="card-body">
-					<form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
+					<form th:action="@{/signup}" th:object="${usuario}" method="post">
 
 						<input type="hidden" th:field="*{id}" />
 
