@@ -122,4 +122,10 @@ public class VacanteServiceImpl implements IVacanteService {
 		return null;
 	}
 
+	@Override
+	public Page<Vacante> buscarDestacadas(int destacado, String estatus, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

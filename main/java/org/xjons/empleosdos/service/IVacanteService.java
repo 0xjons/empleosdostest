@@ -22,4 +22,6 @@ public interface IVacanteService {
 	List<Vacante> buscarByExample(Example<Vacante> example);
 	
 	Page<Vacante> buscarTodas(Pageable page);
+	
+ Page<Vacante> buscarDestacadas(int destacado, String estatus, Pageable pageable);
 }

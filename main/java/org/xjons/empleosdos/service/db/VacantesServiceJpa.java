@@ -69,5 +69,10 @@ public final class VacantesServiceJpa implements IVacanteService {
 		// TODO Auto-generated method stub
 		return vacantesRepo.findAll(page);
 	}
+	
+ @Override
+ public Page<Vacante> buscarDestacadas(int destacado, String estatus, Pageable pageable) {
+     return vacantesRepo.findByDestacadoAndEstatusOrderByIdDesc(destacado, estatus, pageable);
+ }
 
 }

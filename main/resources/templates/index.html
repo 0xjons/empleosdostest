@@ -51,6 +51,24 @@
 							role="button">Detalles &raquo;</a></p>
 				</div>
 			</div>
+			
+			<nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${vacantes.first ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/?(page=${vacantes.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, vacantes.totalPages - 1)}" th:classappend="${pageNum == vacantes.number ? 'active' : ''}">
+                <a class="page-link" th:href="@{/?(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${vacantes.last ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/?(page=${vacantes.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 			<hr>
 		</div> <!-- /container -->

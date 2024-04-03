@@ -33,7 +33,7 @@ public class DatabaseWebSecurity {
         http
             .authorizeHttpRequests(authorize -> authorize
                 // Permitir acceso específico sin autenticación
-                .requestMatchers("/signup", "/login", "/home").permitAll()
+                .requestMatchers("/signup", "/login", "/index", "/home").permitAll()
                 .requestMatchers("/vacantes/view/**").permitAll()
                 // Restricciones más específicas deben ir primero
                 .requestMatchers("/vacantes/**").hasAnyAuthority("SUPERVISOR", "ADMINISTRADOR")

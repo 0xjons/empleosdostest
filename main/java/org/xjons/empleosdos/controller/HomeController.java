@@ -1,5 +1,6 @@
 package org.xjons.empleosdos.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,9 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +24,14 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.xjons.empleosdos.model.Perfil;
 import org.xjons.empleosdos.model.Usuario;
 import org.xjons.empleosdos.model.Vacante;
 import org.xjons.empleosdos.service.ICategoriasService;
+import org.xjons.empleosdos.service.IPerfilesService;
 import org.xjons.empleosdos.service.IUsuariosService;
 import org.xjons.empleosdos.service.IVacanteService;
 
@@ -41,13 +48,19 @@ public final class HomeController {
 
 	@Autowired
 	private ICategoriasService cs;
-	
+
+	@Autowired
+	private IPerfilesService ps;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/")
-	public String mostrarHome(Model model) {
-		return "index";
+	public String mostrarHome(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+	    Pageable pageable = PageRequest.of(page, 10); // Asumiendo que quieres 4 elementos por página
+	    Page<Vacante> vacantes = vs.buscarDestacadas(1, "Aprobada", pageable);
+	    model.addAttribute("vacantes", vacantes);
+	    return "index";
 	}
 
 	@GetMapping("/home")
@@ -61,13 +74,13 @@ public final class HomeController {
 
 		if (session.getAttribute("usuario") == null) {
 			Usuario usuario = us.buscarPorUsername(username);
-			usuario.setPassword(null); //no almacenamos el pass en la sesion
+			usuario.setPassword(null); // no almacenamos el pass en la sesion
 			session.setAttribute("usuario", usuario);
 		}
 
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/login")
 	public String mostrarLogin() {
 		return "formLogin";
@@ -82,16 +95,29 @@ public final class HomeController {
 	public String guardarRegistro(@ModelAttribute Usuario usuario, BindingResult result, RedirectAttributes attributes) {
 		// Primero verifica si el nombre de usuario ya existe
 		Usuario existente = us.buscarPorUsername(usuario.getUsername());
-		
-		String pwdPlano = usuario.getPassword();
-		String pwdEncriptado = passwordEncoder.encode(pwdPlano);
-		
 		if (existente != null) {
 			// Agrega el error en el BindingResult para que se muestre en el formulario
 			result.rejectValue("username", "error.usuario", "El nombre de usuario ya está en uso");
 			// No redireccionas, sino que vuelves a mostrar el formulario con el error
 			return "formRegistro";
 		}
+
+		Perfil perfilUsuario = ps.buscarPorTipo("USUARIO");
+		if (perfilUsuario != null) {
+		    System.out.println("Perfil recuperado: " + perfilUsuario.getPerfil());
+		    List<Perfil> perfiles = new ArrayList<>();
+		    perfiles.add(perfilUsuario);
+		    usuario.setPerfiles(perfiles);
+
+		} else {
+		    System.out.println("Perfil 'USUARIO' no encontrado.");
+		}
+
+
+		String pwdPlano = usuario.getPassword();
+		String pwdEncriptado = passwordEncoder.encode(pwdPlano);
+
+
 
 		// Establece el estatus activo y la fecha de registro
 		usuario.setEstatus(1); // Asumiendo que '1' significa activo en tu dominio
@@ -122,7 +148,7 @@ public final class HomeController {
 		model.addAttribute("vacantes", lista);
 		return "index";
 	}
-	
+
 	@GetMapping("/bcrypt/{texto}")
 	@ResponseBody
 	public String encriptar(@PathVariable("texto") String texto) {

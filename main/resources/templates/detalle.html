@@ -50,6 +50,8 @@
 									<p class="card-text" th:utext="${vacante.detalles}"></p>
 								</div>
 							</div>
+							<a class="btn btn-danger" th:href="@{/signup}"
+								sec:authorize="isAnonymous()">Regístrate para aplicar</a>
 							<a class="btn btn-primary" href="#" role="button"
 								sec:authorize="isAuthenticated() and hasAnyAuthority('USUARIO', 'ADMINISTRADOR')"
 								title="Quiero aplicar para esta oferta de trabajo."><i class="fas fa-file"
